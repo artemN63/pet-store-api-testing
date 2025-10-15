@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
 import {test, expect} from '@playwright/test';
-import { create } from 'domain';
 import { z } from 'zod';
 
 test.describe('User API Tests', () => {

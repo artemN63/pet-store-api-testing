@@ -15,7 +15,6 @@ export async function getAPI(request: APIRequestContext, url: string, expectedSt
     throw new Error(`GET request to ${url} did not return status code ${expectedStatusCode} within 15 attempts.`);
 }
 
-
 export async function postAPI(request: APIRequestContext, url: string, requestBody: any, expectedStatusCode: number, expectedSchema: ZodTypeAny): Promise<APIResponse> {
     const postUserResponse = await request.post(url, { data: requestBody });
     if (postUserResponse.status() === expectedStatusCode) {
@@ -25,6 +24,17 @@ export async function postAPI(request: APIRequestContext, url: string, requestBo
     }
 
     throw new Error(`POST request to ${url} returned status ${postUserResponse.status()} but expected ${expectedStatusCode}.`);
+}
+
+export async function putAPI(request: APIRequestContext, url: string, requestBody: any, expectedStatusCode: number, expectedSchema: ZodTypeAny): Promise<APIResponse> {
+    const putUserResponse = await request.put(url, { data: requestBody });
+    if (putUserResponse.status() === expectedStatusCode) {
+        const putUserResponseBody = await putUserResponse.json();
+        expectedSchema.parse(putUserResponseBody);
+        return putUserResponse;
+    }
+
+    throw new Error(`PUT request to ${url} returned status ${putUserResponse.status()} but expected ${expectedStatusCode}.`);
 }
 
 export async function deleteAPI(request: APIRequestContext, url: string, expectedStatusCode: number, expectedSchema: ZodTypeAny): Promise<APIResponse> {

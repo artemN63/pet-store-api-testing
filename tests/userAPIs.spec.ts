@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import {test, expect} from '@playwright/test';
 import { z } from 'zod';
-import {postAPI, getAPI, deleteAPI} from '../utils/apiCallHelper';
+import {postAPI, getAPI, putAPI, deleteAPI} from '../utils/apiCallHelper';
 
 test.describe('User API Tests', () => {
     const BASE_URL = `${process.env.BASE_URL}${process.env.API_VERSION}`;
@@ -20,7 +20,7 @@ test.describe('User API Tests', () => {
     });
 
     const createUserRequestBody = {
-        id: "345238",
+        id: faker.number.int({min: 1, max: 10000}),
         username: userName,
         firstName: faker.person.firstName(),
         lastName: faker.person.lastName(),
@@ -28,6 +28,17 @@ test.describe('User API Tests', () => {
         password: password,
         phone: faker.phone.number(),
         userStatus: 0
+    }
+
+    const putUserRequestBody = {
+        id: faker.number.int({min: 1, max: 10000}),
+        username: userName,
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        email: faker.internet.email(),
+        password: password,
+        phone: faker.phone.number(),
+        userStatus: faker.number.int({min: 1, max: 10000})
     }
 
     const expectedCreateUserResponseSchema = z.object ({
@@ -42,7 +53,15 @@ test.describe('User API Tests', () => {
         message: z.literal(userName)
     });
 
-  test('Create a new user', async ({request}) => {
+
+test('CRUD', async ({request}) => {
+    await postAPI(request, `${BASE_URL}/user`, createUserRequestBody, 200, expectedCreateUserResponseSchema);
+    await getAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedGetUserResponseSchema);
+    await putAPI(request, `${BASE_URL}/user/${userName}`, putUserRequestBody, 200, expectedCreateUserResponseSchema);
+    await deleteAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedDeleteUserResponseSchema);
+});
+
+test('Create a new user', async ({request}) => {
     await postAPI(request, `${BASE_URL}/user`, createUserRequestBody, 200, expectedCreateUserResponseSchema);});
     
 test('Get user by UserName', async ({request}) => {

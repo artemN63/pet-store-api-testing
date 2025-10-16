@@ -47,6 +47,6 @@ test.describe('Pet API Tests', () => {
     });
 
     test('Post Pet', async ({ request }) => {
-        postAPI(request, `${BASE_URL}/pet`, postPetRequestBody, 200, expectedPostPetResponseSchema);
+        await postAPI(request, `${BASE_URL}/pet`, postPetRequestBody, 200, expectedPostPetResponseSchema);
     });
 });

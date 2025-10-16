@@ -46,7 +46,16 @@ test.describe('Pet API Tests', () => {
         status: z.enum(["available", "pending", "sold"])
     });
 
-    test('Post Pet', async ({ request }) => {
+    const expectedDeletePetResponseSchema = z.object({
+        code: z.literal(200),
+        type: z.literal("unknown"),
+        message: z.string()
+    });
+
+    test('CRUD Pet', async ({ request }) => {
         await postAPI(request, `${BASE_URL}/pet`, postPetRequestBody, 200, expectedPostPetResponseSchema);
+        await getAPI(request, `${BASE_URL}/pet/${postPetRequestBody.id}`, 200, expectedPostPetResponseSchema);
+        await putAPI(request, `${BASE_URL}/pet`, {...postPetRequestBody, status: "available"}, 200, expectedPostPetResponseSchema);
+        await deleteAPI(request, `${BASE_URL}/pet/${postPetRequestBody.id}`, 200, expectedDeletePetResponseSchema);
     });
 });

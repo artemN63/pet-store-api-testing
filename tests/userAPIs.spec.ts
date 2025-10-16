@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import {test, expect} from '@playwright/test';
 import { z } from 'zod';
+import {postAPI, getAPI, deleteAPI} from '../utils/apiCallHelper';
 
 test.describe('User API Tests', () => {
     const BASE_URL = `${process.env.BASE_URL}${process.env.API_VERSION}`;
@@ -42,42 +43,11 @@ test.describe('User API Tests', () => {
     });
 
   test('Create a new user', async ({request}) => {
-    const createUserResponse = await request.post(`${BASE_URL}/user`, {
-        data: createUserRequestBody
-    });
-
-    await expect(createUserResponse.status()).toBe(200);
-
-    const createUserResponseBody = await createUserResponse.json();
-
-    expectedCreateUserResponseSchema.parse(createUserResponseBody);
-});
+    await postAPI(request, `${BASE_URL}/user`, createUserRequestBody, 200, expectedCreateUserResponseSchema);});
     
 test('Get user by UserName', async ({request}) => {
-    let getUserResponse;
-    for (let i = 0; i < 15; i++) {
-        getUserResponse = await request.get(`${BASE_URL}/user/${userName}`);
-        if (getUserResponse.status() === 200) {
-            break;
-        }
-    }
-
-    const getUserResponseBody = await getUserResponse!.json();
-
-    expectedGetUserResponseSchema.parse(getUserResponseBody);
-})
+    await getAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedGetUserResponseSchema);})
 
 test('Delete user by UserName', async ({request}) => {
-    let deleteUserResponse;
-    for (let i = 0; i < 15; i++) {
-        deleteUserResponse = await request.delete(`${BASE_URL}/user/${userName}`);
-        if (deleteUserResponse.status() === 200) {
-            break;
-        }
-    }
-
-    const deleteUserResponseBody = await deleteUserResponse!.json();
-
-    expectedDeleteUserResponseSchema.parse(deleteUserResponseBody);
+    await deleteAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedDeleteUserResponseSchema);})
 })
-});

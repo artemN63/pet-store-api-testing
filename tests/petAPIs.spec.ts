@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { test, expect } from '@playwright/test';
 import { z } from 'zod';
+import {postAPI, getAPI, putAPI, deleteAPI} from '../utils/apiCallHelper';
 
 test.describe('Pet API Tests', () => {
     const BASE_URL = `${process.env.BASE_URL}${process.env.API_VERSION}`;
@@ -46,9 +47,6 @@ test.describe('Pet API Tests', () => {
     });
 
     test('Post Pet', async ({ request }) => {
-        const postPetResponse = await request.post(`${BASE_URL}/pet`, { data: postPetRequestBody });
-        expect(postPetResponse.status()).toBe(200);
-        const postPetResponseBody = await postPetResponse.json();
-        expectedPostPetResponseSchema.parse(postPetResponseBody);
+        postAPI(request, `${BASE_URL}/pet`, postPetRequestBody, 200, expectedPostPetResponseSchema);
     });
 });

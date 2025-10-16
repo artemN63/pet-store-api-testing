@@ -47,6 +47,12 @@ test.describe('User API Tests', () => {
         message: z.literal(createUserRequestBody.id.toString())
     });
 
+    const expectedPutUserResponseSchema = z.object ({
+        code: z.literal(200),
+        type: z.literal("unknown"),
+        message: z.literal(putUserRequestBody.id.toString())
+    });
+
     const expectedDeleteUserResponseSchema = z.object ({
         code: z.literal(200),
         type: z.literal("unknown"),
@@ -57,7 +63,7 @@ test.describe('User API Tests', () => {
 test('CRUD', async ({request}) => {
     await postAPI(request, `${BASE_URL}/user`, createUserRequestBody, 200, expectedCreateUserResponseSchema);
     await getAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedGetUserResponseSchema);
-    await putAPI(request, `${BASE_URL}/user/${userName}`, putUserRequestBody, 200, expectedCreateUserResponseSchema);
+    await putAPI(request, `${BASE_URL}/user/${userName}`, putUserRequestBody, 200, expectedPutUserResponseSchema);
     await deleteAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedDeleteUserResponseSchema);
 });
 

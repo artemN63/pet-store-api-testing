@@ -50,3 +50,11 @@ export async function deleteAPI(request: APIRequestContext, url: string, expecte
 
     throw new Error(`DELETE request to ${url} did not return status code ${expectedStatusCode} within 15 attempts.`);
 }
+
+export function generateListOfUsers(createUserRequestBody: () => any, count: number): any[] {
+        const users: any[] = [];
+        for (let i = 0; i < count; i++) {
+            users.push(createUserRequestBody());
+        }
+        return users;
+    };

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import {test, expect} from '@playwright/test';
 import { z } from 'zod';
-import {postAPI, getAPI, putAPI, deleteAPI} from '../utils/apiCallHelper';
+import {postAPI, getAPI, putAPI, deleteAPI, logIn, logOut} from '../utils/apiCallHelper';
 
 test.describe('User API Tests', () => {
     const BASE_URL = `${process.env.BASE_URL}${process.env.API_VERSION}`;
@@ -59,10 +59,24 @@ test.describe('User API Tests', () => {
         message: z.literal(userName)
     });
 
+    const expectedLogInUserResponseSchema = z.object ({
+        code: z.literal(200),
+        type: z.literal("unknown"),
+        message: z.string()
+    });
+
+    const expectedLogOutUserResponseSchema = z.object ({
+        code: z.literal(200),
+        type: z.literal("unknown"),
+        message: z.literal("ok")
+    });
+
 
 test('CRUD', async ({request}) => {
     await postAPI(request, `${BASE_URL}/user`, createUserRequestBody, 200, expectedCreateUserResponseSchema);
     await getAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedGetUserResponseSchema);
+    await logIn(request, `${BASE_URL}/user/login`, userName!, password!, 200, expectedLogInUserResponseSchema);
+    await logOut(request, `${BASE_URL}/user/logout`, 200, expectedLogOutUserResponseSchema);
     await putAPI(request, `${BASE_URL}/user/${userName}`, putUserRequestBody, 200, expectedPutUserResponseSchema);
     await deleteAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedDeleteUserResponseSchema);
 });

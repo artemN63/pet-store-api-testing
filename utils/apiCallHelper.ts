@@ -50,3 +50,25 @@ export async function deleteAPI(request: APIRequestContext, url: string, expecte
 
     throw new Error(`DELETE request to ${url} did not return status code ${expectedStatusCode} within 15 attempts.`);
 }
+
+export async function logIn(request: APIRequestContext, url: string, username: string, password: string, expectedStatusCode: number, expectedSchema: ZodTypeAny): Promise<APIResponse> {
+    const logIn = await request.get(url, { data: { username, password } });
+    if (logIn.status() === expectedStatusCode) {
+        const logInResponseBody = await logIn.json();
+        expectedSchema.parse(logInResponseBody);
+        return logIn;
+    }
+
+    throw new Error(`GET request to ${url} did not return status code ${expectedStatusCode}.`);
+}
+
+export async function logOut(request: APIRequestContext, url: string, expectedStatusCode: number, expectedSchema: ZodTypeAny): Promise<APIResponse> {
+    const logOut = await request.get(url);
+    if (logOut.status() === expectedStatusCode) {
+        const logOutResponseBody = await logOut.json();
+        expectedSchema.parse(logOutResponseBody);
+        return logOut;
+    }
+
+    throw new Error(`GET request to ${url} did not return status code ${expectedStatusCode}.`);
+}

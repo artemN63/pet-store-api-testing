@@ -74,9 +74,9 @@ test.describe('User API Tests', () => {
 
 test('CRUD', async ({request}) => {
     await postAPI(request, `${BASE_URL}/user`, createUserRequestBody, 200, expectedCreateUserResponseSchema);
-    await getAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedGetUserResponseSchema, {});
+    await getAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedGetUserResponseSchema);
     await getAPI(request, `${BASE_URL}/user/login`, 200, expectedLogInUserResponseSchema, {username: userName, password: password});
-    await getAPI(request, `${BASE_URL}/user/logout`, 200, expectedLogOutUserResponseSchema, {});
+    await getAPI(request, `${BASE_URL}/user/logout`, 200, expectedLogOutUserResponseSchema);
     await putAPI(request, `${BASE_URL}/user/${userName}`, putUserRequestBody, 200, expectedPutUserResponseSchema);
     await deleteAPI(request, `${BASE_URL}/user/${userName}`, 200, expectedDeleteUserResponseSchema);
 });

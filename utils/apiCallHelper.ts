@@ -1,7 +1,7 @@
 import {APIRequestContext, APIResponse, Response} from '@playwright/test';
 import { ZodTypeAny } from 'zod';
 
-export async function getAPI(request: APIRequestContext, url: string, expectedStatusCode: number, expectedSchema: ZodTypeAny, parameters: Record<string, any>): Promise<APIResponse> {
+export async function getAPI(request: APIRequestContext, url: string, expectedStatusCode: number, expectedSchema: ZodTypeAny, parameters: Record<string, any> = {}): Promise<APIResponse> {
     let getUserResponse;
     for (let i = 0; i < 15; i++) {
         getUserResponse = await request.get(url, { params: parameters });

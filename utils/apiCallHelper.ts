@@ -7,7 +7,7 @@ export async function getAPI(request: APIRequestContext, url: string, expectedSt
         getUserResponse = await request.get(url, { params: parameters });
         if (getUserResponse.status() === expectedStatusCode) {
             const getUserResponseBody = await getUserResponse!.json();
-            expectedSchema.parse(getUserResponseBody);
+            expectedSchema.parse(getUserResponseBody[0]);
             return getUserResponse;
         }
     }

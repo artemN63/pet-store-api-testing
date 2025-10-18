@@ -58,4 +58,8 @@ test.describe('Pet API Tests', () => {
         await putAPI(request, `${BASE_URL}/pet`, {...postPetRequestBody, status: "available"}, 200, expectedPostPetResponseSchema);
         await deleteAPI(request, `${BASE_URL}/pet/${postPetRequestBody.id}`, 200, expectedDeletePetResponseSchema);
     });
+
+    test('Get Pet by Status', async ({ request }) => {
+        await getAPI(request, `${BASE_URL}/pet/findByStatus`, 200, expectedPostPetResponseSchema, { status: 'available' });
+    });
 });

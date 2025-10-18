@@ -5,7 +5,11 @@ import {deleteAPI, getAPI, postAPI} from '../utils/apiCallHelper';
 
 const BASE_URL = `${process.env.BASE_URL}${process.env.API_VERSION}`;
 
-const expectedInventoryResponseSchema = z.record(z.string(), z.number());
+const expectedInventoryResponseSchema = z
+        .record(z.string(), z.number())
+        .refine((data) => Object.keys(data).length === 14
+    );
+
 
 const expectedOrderResponseSchema = z.object({
     id: z.number(),
@@ -40,18 +44,10 @@ test.describe('Pet API Tests', () => {
 
 
 test.describe('Pet Store CRUD API Tests', () => {
-    let orderData: ReturnType<typeof generateOrderRequestBody>;
-
-    test.beforeEach(async ({ request }) => {
-        orderData = generateOrderRequestBody();
-        await postAPI(request, `${BASE_URL}/store/order`, orderData, 200, expectedOrderResponseSchema);
-    });
-
+    const orderData = generateOrderRequestBody();
     test('Get order by ID', async ({ request }) => {
+        await postAPI(request, `${BASE_URL}/store/order`, orderData, 200, expectedOrderResponseSchema);
         await getAPI(request, `${BASE_URL}/store/order/${orderData.id}`, 200, expectedOrderResponseSchema);
-    });
-
-    test.afterEach(async ({ request }) => {
         await deleteAPI(request, `${BASE_URL}/store/order/${orderData.id}`, 200, expectedDeleteResponseSchema);
     });
 });

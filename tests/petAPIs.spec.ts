@@ -45,7 +45,7 @@ test.describe('Pet API Tests', () => {
         })).optional(),
         status: z.enum(["available", "pending", "sold"])
     });
-
+    
     const expectedDeletePetResponseSchema = z.object({
         code: z.literal(200),
         type: z.literal("unknown"),
@@ -60,6 +60,6 @@ test.describe('Pet API Tests', () => {
     });
 
     test('Get Pet by Status', async ({ request }) => {
-        await getAPI(request, `${BASE_URL}/pet/findByStatus`, 200, expectedPostPetResponseSchema, { status: 'available' });
+        await getAPI(request, `${BASE_URL}/pet/findByStatus`, 200, z.array(expectedPostPetResponseSchema), { status: 'available' });
     });
 });

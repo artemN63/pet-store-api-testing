@@ -30,6 +30,22 @@ test.describe('Pet API Tests', () => {
         status: "pending"
     };
 
+    // Zod schema for Pet response validation
+    const petSchema = z.object({
+        id: z.number(),
+        category: z.object({
+            id: z.number(),
+            name: z.string()
+        }).optional(),
+        name: z.string(),
+        photoUrls: z.array(z.string()),
+        tags: z.array(z.object({
+            id: z.number(),
+            name: z.string()
+        })).optional(),
+        status: z.enum(["available", "pending", "sold"])
+    });
+
     // Zod schema for POST Pet response validation
     const expectedPostPetResponseSchema = z.object({
         id: z.number(),
@@ -61,5 +77,9 @@ test.describe('Pet API Tests', () => {
 
     test('Get Pet by Status', async ({ request }) => {
         await getAPI(request, `${BASE_URL}/pet/findByStatus`, 200, z.array(expectedPostPetResponseSchema), { status: 'available' });
+    });
+
+    test('Get Pet by Tags', async ({ request }) => {
+        await getAPI(request, `${BASE_URL}/pet/findByTags`, 200, z.array(petSchema), { tags: '0, string' });
     });
 });

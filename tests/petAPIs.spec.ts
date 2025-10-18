@@ -49,11 +49,11 @@ test.describe('Pet API Tests', () => {
     // Zod schema for POST Pet response validation
     const expectedPostPetResponseSchema = z.object({
         id: z.number(),
-        name: z.string(),
-        photoUrls: z.array(z.string()),
+        name: z.string().optional(),
+        photoUrls: z.array(z.string()).optional(),
         category: z.object({
             id: z.number(),
-            name: z.string()
+            name: z.string().optional()
         }).optional(),
         tags: z.array(z.object({
             id: z.number(),

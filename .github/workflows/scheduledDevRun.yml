@@ -27,8 +27,8 @@ jobs:
         env:
           BASE_URL: 'https://petstore.swagger.io'
           API_VERSION: '/v2'
-          USERNAME: 'TestUserNameArtem123'
-          PASSWORD: 'Test1234!'
+          USERNAME: process.env.USERNAME
+          PASSWORD: process.env.PASSWORD
         run: npm test
 
       - name: Upload test results

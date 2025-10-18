@@ -45,7 +45,7 @@ test.describe('Pet API Tests', () => {
 
 test.describe('Pet Store CRUD API Tests', () => {
     const orderData = generateOrderRequestBody();
-    test('Get order by ID', async ({ request }) => {
+    test('CRUD Operations', async ({ request }) => {
         await postAPI(request, `${BASE_URL}/store/order`, orderData, 200, expectedOrderResponseSchema);
         await getAPI(request, `${BASE_URL}/store/order/${orderData.id}`, 200, expectedOrderResponseSchema);
         await deleteAPI(request, `${BASE_URL}/store/order/${orderData.id}`, 200, expectedDeleteResponseSchema);
